@@ -149,7 +149,7 @@
             Controls.Add(panel2);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "ToChat";
-            Text = "HRToChat";
+            Text = "HASToChat";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
