@@ -70,7 +70,7 @@ namespace HR
             if (!Program.IsConsole)
                 this.FormClosed += delegate { Process.GetCurrentProcess().Kill(); };
         }
-        void AddInfo(ref string mainline,string lineAdd)
+        void AddInfo(ref string mainline, string lineAdd)
         {
             if (mainline != string.Empty)
                 mainline += "";
