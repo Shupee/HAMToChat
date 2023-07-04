@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace HR
 {
@@ -20,11 +21,12 @@ namespace HR
                 SPInf = Instance.SPInf;
                 SPLyr = Instance.SPLyr;
                 SPArt = Instance.SPArt;
+                activity = Instance.activity;
             }
         }
         public void SerializeCfg()
             => File.WriteAllText(_cfgPath, JsonConvert.SerializeObject(this, Formatting.Indented));
-        public bool BPMToChat, Stress;
+        public bool BPMToChat, Stress, activity;
         public bool SPInf, SPLyr, SPArt;
         public string? Token;
     }

@@ -36,6 +36,7 @@
             checkBox3 = new CheckBox();
             label1 = new Label();
             panel2 = new Panel();
+            checkBox6 = new CheckBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
@@ -69,15 +70,15 @@
             panel1.Controls.Add(checkBox4);
             panel1.Controls.Add(checkBox3);
             panel1.Controls.Add(label1);
-            panel1.Location = new Point(9, 42);
+            panel1.Location = new Point(9, 67);
             panel1.Name = "panel1";
-            panel1.Size = new Size(213, 122);
+            panel1.Size = new Size(213, 97);
             panel1.TabIndex = 2;
             // 
             // checkBox5
             // 
             checkBox5.AutoSize = true;
-            checkBox5.Location = new Point(14, 53);
+            checkBox5.Location = new Point(14, 69);
             checkBox5.Name = "checkBox5";
             checkBox5.Size = new Size(72, 24);
             checkBox5.TabIndex = 3;
@@ -88,7 +89,7 @@
             // checkBox4
             // 
             checkBox4.AutoSize = true;
-            checkBox4.Location = new Point(108, 23);
+            checkBox4.Location = new Point(108, 39);
             checkBox4.Name = "checkBox4";
             checkBox4.Size = new Size(66, 24);
             checkBox4.TabIndex = 2;
@@ -99,7 +100,7 @@
             // checkBox3
             // 
             checkBox3.AutoSize = true;
-            checkBox3.Location = new Point(14, 23);
+            checkBox3.Location = new Point(14, 39);
             checkBox3.Name = "checkBox3";
             checkBox3.Size = new Size(88, 24);
             checkBox3.TabIndex = 1;
@@ -119,12 +120,24 @@
             // panel2
             // 
             panel2.BackColor = SystemColors.ButtonShadow;
+            panel2.Controls.Add(checkBox6);
             panel2.Controls.Add(checkBox2);
             panel2.Controls.Add(checkBox1);
             panel2.Location = new Point(9, 3);
             panel2.Name = "panel2";
-            panel2.Size = new Size(213, 35);
+            panel2.Size = new Size(213, 58);
             panel2.TabIndex = 3;
+            // 
+            // checkBox6
+            // 
+            checkBox6.AutoSize = true;
+            checkBox6.Location = new Point(14, 31);
+            checkBox6.Name = "checkBox6";
+            checkBox6.Size = new Size(80, 24);
+            checkBox6.TabIndex = 2;
+            checkBox6.Text = "Activity";
+            checkBox6.UseVisualStyleBackColor = true;
+            checkBox6.CheckedChanged += checkBox6_CheckedChanged;
             // 
             // ToChat
             // 
@@ -154,5 +167,6 @@
         private CheckBox checkBox5;
         private CheckBox checkBox4;
         private CheckBox checkBox3;
+        private CheckBox checkBox6;
     }
 }

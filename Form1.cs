@@ -22,6 +22,7 @@ namespace HR
             checkBox5.Checked = _config.SPArt;
             checkBox4.Checked = _config.SPLyr;
             checkBox3.Checked = _config.SPInf;
+            checkBox6.Checked = _config.activity;
             waiter = new Waiter(delegate
             {
 
@@ -49,26 +50,33 @@ namespace HR
                 {
                     if (_config.SPInf || _config.SPLyr || _config.SPArt)
                     {
-                        if (_config.Stress || _config.BPMToChat)
+                        if (sendLine != string.Empty)
                             sendLine += "";
                         if (_config.SPInf)
                         {
                             sendLine += $"{spotify.TimeAndEndTime()}" + (spotify.IsRepeat() ? "🔁" : "");
                             sendLine += "" + $"🎵{spotify.trackName}🎵";
-                            if (_config.SPArt || _config.SPLyr)
-                                sendLine += "";
+                   
                         }
                         if (_config.SPArt)
                         {
-                            sendLine += $"by {spotify.Artists}";
-                            if (_config.SPLyr)
+                            if (sendLine != string.Empty)
                                 sendLine += "";
+                            sendLine += $"by {spotify.Artists}";
                         }
                         if (_config.SPLyr)
                         {
+                            if (sendLine != string.Empty)
+                                sendLine += "";
                             sendLine += $">{spotify.GetCurrentLine()}" + (blink ? "_" : "");
                         }
                     }
+                }
+                if(_config.activity)
+                {
+                    if (sendLine != string.Empty)
+                        sendLine += "";
+                    sendLine += $"now in \"{GetCurrentWindow.GetActiveWindowTitle()}\"";
                 }
                 OscChatbox.SendMessage(sendLine, direct: true);
             }, 1800);
@@ -104,6 +112,12 @@ namespace HR
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             _config.SPInf = ((CheckBox)sender).Checked;
+            _config.SerializeCfg();
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            _config.activity = ((CheckBox)sender).Checked;
             _config.SerializeCfg();
         }
     }
