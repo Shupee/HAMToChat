@@ -43,48 +43,39 @@ namespace HR
 
                 string sendLine = "";
                 if (_config.BPMToChat)
-                    sendLine += "❤️" + hRToChat.HR + " BPM";
+                    AddInfo(ref sendLine, "❤️" + hRToChat.HR + " BPM");
                 if (_config.Stress)
-                    sendLine += (_config.BPMToChat ? "" : "") + $"Tense: {_stress.GetStress(hRToChat.HR)}%";
+                    AddInfo(ref sendLine, $"Tense: {_stress.GetStress(hRToChat.HR)}%");
                 if (spotify.IsPlaying)
                 {
                     if (_config.SPInf || _config.SPLyr || _config.SPArt)
                     {
-                        if (sendLine != string.Empty)
-                            sendLine += "";
+                        AddInfo(ref sendLine, "");
                         if (_config.SPInf)
                         {
-                            sendLine += $"{spotify.TimeAndEndTime()}" + (spotify.IsRepeat() ? "🔁" : "");
-                            sendLine += "" + $"🎵{spotify.trackName}🎵";
-                   
+                            AddInfo(ref sendLine, $"{spotify.TimeAndEndTime()}" + (spotify.IsRepeat() ? "🔁" : ""));
+                            AddInfo(ref sendLine, $"🎵{spotify.trackName}🎵");
                         }
                         if (_config.SPArt)
-                        {
-                            if (sendLine != string.Empty)
-                                sendLine += "";
-                            sendLine += $"by {spotify.Artists}";
-                        }
+                            AddInfo(ref sendLine, $"by {spotify.Artists}");
                         if (_config.SPLyr)
-                        {
-                            if (sendLine != string.Empty)
-                                sendLine += "";
-                            sendLine += $">{spotify.GetCurrentLine()}" + (blink ? "_" : "");
-                        }
+                            AddInfo(ref sendLine, $">{spotify.GetCurrentLine()}" + (blink ? "_" : ""));
                     }
                 }
-                if(_config.activity)
-                {
-                    if (sendLine != string.Empty)
-                        sendLine += "";
-                    sendLine += $"now in \"{GetCurrentWindow.GetActiveWindowTitle()}\"";
-                }
+                if (_config.activity)
+                    AddInfo(ref sendLine, $"now in \"{GetCurrentWindow.GetActiveWindowTitle()}\"");
                 OscChatbox.SendMessage(sendLine, direct: true);
             }, 1800);
             waiter.Start();
             if (!Program.IsConsole)
                 this.FormClosed += delegate { Process.GetCurrentProcess().Kill(); };
         }
-
+        void AddInfo(ref string mainline,string lineAdd)
+        {
+            if (mainline != string.Empty)
+                mainline += "";
+            mainline += lineAdd;
+        }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             _config.BPMToChat = ((CheckBox)sender).Checked;
