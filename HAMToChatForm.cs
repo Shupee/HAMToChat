@@ -33,6 +33,11 @@ namespace HR
                 else if (_config.ApiHB == "pulsoid")
                     new ByVard();
                 InitializeComponent();
+                if (_config.ApiHB == "NULL")
+                    checkBox1.Enabled = false;
+                if (_config.ApiHB == "NULL")
+                    checkBox2.Enabled = false;
+
                 checkBox1.Checked = _config.BPMToChat;
                 checkBox2.Checked = _config.Stress;
                 checkBox5.Checked = _config.SPArt;
