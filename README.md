@@ -1,11 +1,9 @@
 # HAMToChat
 [![Static Badge](https://img.shields.io/badge/HAMToChat-v0.1-green)](https://github.com/1sup4ik1/HAMToChat/releases/tag/v0.1)
 ## In Game
-<table>
-  <tr>
-    <td align="center"><img src="https://github.com/1sup4ik1/HAMToChat/blob/master/image/image.png" alt="login"></td>
-  </tr>
-</table>
+
+<img src="https://github.com/1sup4ik1/HAMToChat/blob/master/image/image.png" alt="login">
+
 ## Features
 - Your Heart Beat
 - Your active application
