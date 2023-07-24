@@ -10,6 +10,7 @@ namespace HR
 
         public Config(string CfgPath)
         {
+            Console.WriteLine(CfgPath);
             _cfgPath = CfgPath;
             if (File.Exists(CfgPath))
             {
@@ -18,16 +19,21 @@ namespace HR
                 BPMToChat = Instance.BPMToChat;
                 Stress = Instance.Stress;
                 Token = Instance.Token;
-                SPInf = Instance.SPInf;
+                SPTime = Instance.SPTime;
+                SPName = Instance.SPName;
                 SPLyr = Instance.SPLyr;
                 SPArt = Instance.SPArt;
                 activity = Instance.activity;
+                UWS = Instance.UWS;
+                ApiHB = Instance.ApiHB;
             }
+     
         }
         public void SerializeCfg()
             => File.WriteAllText(_cfgPath, JsonConvert.SerializeObject(this, Formatting.Indented));
-        public bool BPMToChat, Stress, activity;
-        public bool SPInf, SPLyr, SPArt;
-        public string? Token;
+        public bool BPMToChat, Stress, activity, UWS;
+        public string ApiHB = "NULL";
+        public bool SPTime, SPName, SPLyr, SPArt;
+        public string? Token = "NULL";
     }
 }

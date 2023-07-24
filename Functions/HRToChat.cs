@@ -1,5 +1,4 @@
-﻿using HR.Services.PulsoidAPI;
-using HR.Shared;
+﻿using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace HR.Functions
@@ -23,10 +22,9 @@ namespace HR.Functions
                         MessageBoxIcon.Error,
                         MessageBoxDefaultButton.Button1,
                         MessageBoxOptions.DefaultDesktopOnly);
-                    new Config("Config.json").SerializeCfg();
+                    new Config("Config.json") { Token = "" }.SerializeCfg();
                     Process.GetCurrentProcess().Kill();
                 }
-
                 string tokenTry = Console.ReadLine();
                 if (tokenTry == null || string.Empty == tokenTry)
                 {
@@ -35,14 +33,48 @@ namespace HR.Functions
                 }
                 config.Token = tokenTry;
                 config.SerializeCfg();
+
             }
-            var ArgParss = new KVArgs(new string[] { $"token={config.Token}" });
-            var HBService = new PulsoidTokenService().CreateService(ArgParss);
-            HBService.OnHeartbeat += new Action<int>((HBRes) =>
+            new Waiter(delegate {
+                HR = GetMyBpmPlsAsync(config.Token).GetAwaiter().GetResult();
+            }, 2000).Start();
+            //var ArgParss = new KVArgs(new string[] { $"token={config.Token}" });
+            //var TokenService = new PulsoidTokenService();
+            //Open(ArgParss, TokenService);
+            //TokenService.listener.OnClose += delegate
+            //{
+            //    Open(ArgParss, TokenService);
+            //};
+
+        }
+        //"https://pulsoid.net/v1/api/feed/ce72ae82-ca71-4545-b3a8-a2ec35740d60"
+        async Task<int> GetMyBpmPlsAsync(string feed)
+        {
+            var httpClient = new HttpClient();
+            var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+            httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+
+            var uri = new Uri(feed);
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            var response = await httpClient.SendAsync(request);
+
+            // Handle the response here
+            if (response.IsSuccessStatusCode)
             {
-                HR = HBRes;
-                OnHB.Invoke(HBRes);
-            });
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<MyBPM>(content).bpm;
+            }
+            else
+            {
+                Console.WriteLine("Request failed with status code: " + response.StatusCode);
+                return 0;
+            }
+        }
+        class MyBPM
+        {
+            public int bpm;
+            public string measured_at;
         }
     }
 }

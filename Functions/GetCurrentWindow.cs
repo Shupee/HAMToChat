@@ -18,9 +18,7 @@ namespace HR.Functions
             IntPtr handle = GetForegroundWindow();
 
             if (GetWindowText(handle, Buff, nChars) > 0)
-            {
                 return Buff.ToString();
-            }
             return null;
         }
     }

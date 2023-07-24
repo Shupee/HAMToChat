@@ -31,6 +31,8 @@
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
             panel1 = new Panel();
+            checkBox8 = new CheckBox();
+            checkBox7 = new CheckBox();
             checkBox5 = new CheckBox();
             checkBox4 = new CheckBox();
             checkBox3 = new CheckBox();
@@ -57,23 +59,47 @@
             checkBox2.AutoSize = true;
             checkBox2.Location = new Point(118, 3);
             checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(69, 24);
+            checkBox2.Size = new Size(68, 24);
             checkBox2.TabIndex = 1;
-            checkBox2.Text = "Stress";
+            checkBox2.Text = "Tense";
             checkBox2.UseVisualStyleBackColor = true;
             checkBox2.CheckedChanged += checkBox2_CheckedChanged;
             // 
             // panel1
             // 
             panel1.BackColor = SystemColors.ButtonShadow;
+            panel1.Controls.Add(checkBox8);
+            panel1.Controls.Add(checkBox7);
             panel1.Controls.Add(checkBox5);
             panel1.Controls.Add(checkBox4);
             panel1.Controls.Add(checkBox3);
             panel1.Controls.Add(label1);
             panel1.Location = new Point(9, 67);
             panel1.Name = "panel1";
-            panel1.Size = new Size(213, 97);
+            panel1.Size = new Size(213, 124);
             panel1.TabIndex = 2;
+            // 
+            // checkBox8
+            // 
+            checkBox8.AutoSize = true;
+            checkBox8.Location = new Point(25, 97);
+            checkBox8.Name = "checkBox8";
+            checkBox8.Size = new Size(149, 24);
+            checkBox8.TabIndex = 5;
+            checkBox8.Text = "Update with lyrics";
+            checkBox8.UseVisualStyleBackColor = true;
+            checkBox8.CheckedChanged += checkBox8_CheckedChanged;
+            // 
+            // checkBox7
+            // 
+            checkBox7.AutoSize = true;
+            checkBox7.Location = new Point(121, 69);
+            checkBox7.Name = "checkBox7";
+            checkBox7.Size = new Size(64, 24);
+            checkBox7.TabIndex = 4;
+            checkBox7.Text = "Time";
+            checkBox7.UseVisualStyleBackColor = true;
+            checkBox7.CheckedChanged += checkBox7_CheckedChanged;
             // 
             // checkBox5
             // 
@@ -89,7 +115,7 @@
             // checkBox4
             // 
             checkBox4.AutoSize = true;
-            checkBox4.Location = new Point(108, 39);
+            checkBox4.Location = new Point(121, 39);
             checkBox4.Name = "checkBox4";
             checkBox4.Size = new Size(66, 24);
             checkBox4.TabIndex = 2;
@@ -102,20 +128,20 @@
             checkBox3.AutoSize = true;
             checkBox3.Location = new Point(14, 39);
             checkBox3.Name = "checkBox3";
-            checkBox3.Size = new Size(88, 24);
+            checkBox3.Size = new Size(71, 24);
             checkBox3.TabIndex = 1;
-            checkBox3.Text = "Play Info";
+            checkBox3.Text = "Name";
             checkBox3.UseVisualStyleBackColor = true;
             checkBox3.CheckedChanged += checkBox3_CheckedChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(74, 0);
+            label1.Location = new Point(59, 0);
             label1.Name = "label1";
-            label1.Size = new Size(56, 20);
+            label1.Size = new Size(95, 20);
             label1.TabIndex = 0;
-            label1.Text = "Spotify";
+            label1.Text = "Media Player";
             // 
             // panel2
             // 
@@ -144,12 +170,12 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GrayText;
-            ClientSize = new Size(234, 173);
+            ClientSize = new Size(234, 203);
             Controls.Add(panel1);
             Controls.Add(panel2);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "ToChat";
-            Text = "HASToChat";
+            Text = "HAMToChat";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
@@ -168,5 +194,7 @@
         private CheckBox checkBox4;
         private CheckBox checkBox3;
         private CheckBox checkBox6;
+        private CheckBox checkBox7;
+        private CheckBox checkBox8;
     }
 }

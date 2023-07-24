@@ -4,7 +4,7 @@
     {
         private bool _sending;
         private readonly Action _action;
-        private int _waitTimeInMs;
+        private double _waitTimeInMs;
 
         public Waiter(Action action, int waitTimeInMs)
         {
@@ -12,7 +12,7 @@
             _waitTimeInMs = waitTimeInMs;
             _action = action;
         }
-        public void ChangeTime(int newTimeInMs)
+        public void ChangeTime(double newTimeInMs)
          => _waitTimeInMs = newTimeInMs;
 
         public void Start()
@@ -22,7 +22,7 @@
             {
                 while (_sending)
                 {
-                    Thread.Sleep(_waitTimeInMs);
+                    Thread.Sleep((int)_waitTimeInMs);
                     _action();
                 }
             })).Start();

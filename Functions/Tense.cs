@@ -1,10 +1,10 @@
 ﻿namespace HR.Functions
 {
-    public class Stress
+    public class Tense
     {
         int _minValue;
         int _maxValue;
-        public Stress(int minValue, int maxValue)
+        public Tense(int minValue, int maxValue)
         {
             _minValue = minValue;
             _maxValue = maxValue;
