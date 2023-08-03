@@ -10,7 +10,7 @@ namespace HAMToChat.Functions
     internal class BySoc
     {
         public static int HR = 0;
-        public BySoc()
+        public BySoc(bool Ismb7)
         {
             new Thread(new ParameterizedThreadStart(async delegate
             {
@@ -18,8 +18,10 @@ namespace HAMToChat.Functions
                 server.AddWebSocketService<MyWebSocketService>("/");
                 server.Start();
                 await Task.Delay(1000);
-                OpenBrowser("https://vard88508.github.io/vrc-osc-miband-hrm/html/");
-
+                if (!Ismb7)
+                    OpenBrowser("https://vard88508.github.io/vrc-osc-miband-hrm/html/");
+                else
+                    OpenBrowser("https://1sup4ik1.github.io/HAMToChat/mi7/");
 
                 Console.WriteLine("Waiting for connection from browser...");
                 await Task.Delay(-1); // Wait indefinitely
