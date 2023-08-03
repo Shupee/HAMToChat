@@ -7,10 +7,10 @@ using WebSocketSharp;
 
 namespace HAMToChat.Functions
 {
-    internal class ByVard
+    internal class BySoc
     {
         public static int HR = 0;
-        public ByVard()
+        public BySoc()
         {
             new Thread(new ParameterizedThreadStart(async delegate
             {

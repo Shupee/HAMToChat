@@ -28,10 +28,10 @@ namespace HR
 
             try
             {
-                if (_config.ApiHB == "vardAPI")
+                if (_config.ApiHB == "pulsoid")
                     hRToChat = new HRToChat(_config);
-                else if (_config.ApiHB == "pulsoid")
-                    new ByVard();
+                else if (_config.ApiHB == "vardAPI")
+                    new BySoc();
                 InitializeComponent();
                 if (_config.ApiHB == "NULL")
                     checkBox1.Enabled = false;
@@ -99,7 +99,7 @@ namespace HR
 
             if (_config.BPMToChat && _config.ApiHB != "null")
             {
-                int hr = _config.ApiHB == "vardAPI" ? ByVard.HR : hRToChat.HR;
+                int hr = _config.ApiHB == "vardAPI" ? BySoc.HR : hRToChat.HR;
                 AddInfo(ref sendLine, "❤️" + hr + " BPM" + (_config.Stress ? $"|Tense: {_tense.GetStress(hr)}%" : ""));
             }
 

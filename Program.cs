@@ -9,7 +9,7 @@ namespace HR
         [STAThread]
         static void Main(string[] args)
         {
-            if(args.Contains("console"))
+            if(args.Contains("-console"))
             {
                 IsConsole = true;
                 Logger.AllocConsole();
