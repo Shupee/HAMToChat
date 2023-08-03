@@ -300,9 +300,6 @@
 
                 // Update Worn/Not Worn and Heartrate
                 var activity = window.miband.activityReader.Data.History;
-
-                alert(activity);
-                console.log(activity)
                 if (activity.length > 0) {
                     if (activity[activity.length - 1].rawKind == 115) {
                         notworndisplay.innerHTML = "Band not being worn!";
@@ -383,6 +380,8 @@
 
 
         async function loadRecentActivityData() {
+            alert(e.message);
+            console.log(e)
             if(window.miband && window.miband.GATT && !window.miband.GATT.connected)
             {
                 clearInterval(activityTimer);
