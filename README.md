@@ -32,6 +32,6 @@
 #### Console activate
 - To enable console put "-console" to args
 ## Credits
-- [Vard88508](https://github.com/vard88508) for [vrc-osc-miband-hr](https://vard88508.github.io/vrc-osc-miband-hrm/html/)
+- [Vard88508](https://github.com/vard88508) for [vrc-osc-miband-hr](https://github.com/vard88508/vrc-osc-miband-hrm/)
 - [patyork](https://github.com/patyork) for [miband-7-monitor](https://github.com/patyork/miband-7-monitor/)
 - [DudyaDude](https://github.com/DubyaDude) for [WindowsMediaController](https://github.com/DubyaDude/WindowsMediaController)
