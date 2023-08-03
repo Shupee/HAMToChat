@@ -311,7 +311,7 @@
 
                     var hr = activity[activity.length - 1].heartRate
                     hrdisplay.innerHTML = hr ? hr : "--";
-                    ws.send(JSON.stringify({ "text": hr }));
+                    ws.send(hr);
                     hrdisplaydate.innerHTML = relativeDatetime(activity[activity.length - 1].date);
                 }
 
