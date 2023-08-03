@@ -23,9 +23,12 @@
 7. In "config.json" replace "NULL" in Token with your link. Exemple: "https://pulsoid.net/v1/api/feed/YOUR_FEED_REFERENCE"
 8. Done!
 #### You also can use direct bluetooth connection
-1. Open the "config.json" and replace "NULL" in ApiHB with "vardAPI"(if you are using miband 7 use "Ismb7")
-2. Follow the instructions from this [GitRep](https://github.com/vard88508/vrc-osc-miband-hrm)
-3. Done!
+1. Get auth key of your device. (For more information - please visit https://freemyband.com/ or https://github.com/argrento/huami-token if you experienced with python)
+2. Download and launch HAMToChat.exe
+3. Open the "config.json" and replace "NULL" in ApiHB with "vardAPI"(if you are using miband 7 use "Ismb7")
+4. Restart HAMToChat.exe
+5. After opening a browser window enter your auth key and click Connect (Make sure you turned off bluetooth on your phone)
+6. Done!
 #### Console activate
 - To enable console put "-console" to args
 ## Credits
