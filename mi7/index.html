@@ -387,9 +387,9 @@
                 return
             }
 
-            //var newest = window.miband.activityReader.Data.NewestDate
-            //newest = new Date(newest-0 + 1*1000) // 1 second in the future, or the most recent gets re-returned
-            //if(newest)
+            var newest = window.miband.activityReader.Data.NewestDate
+            newest = new Date(newest-0 + 1*1000) // 1 second in the future, or the most recent gets re-returned
+            if(newest)
             {
                 console.log("looking for new activity data since " + newest);
                 await window.miband.activityReader.readSince(newest);
