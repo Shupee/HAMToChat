@@ -300,6 +300,9 @@
 
                 // Update Worn/Not Worn and Heartrate
                 var activity = window.miband.activityReader.Data.History;
+
+                alert(activity);
+                console.log(activity)
                 if (activity.length > 0) {
                     if (activity[activity.length - 1].rawKind == 115) {
                         notworndisplay.innerHTML = "Band not being worn!";
@@ -311,7 +314,7 @@
 
                     var hr = activity[activity.length - 1].heartRate
                     hrdisplay.innerHTML = hr ? hr : "--";
-                    ws.send(JSON.stringify({ "text": hr }));
+                    ws.send(hr);
                     hrdisplaydate.innerHTML = relativeDatetime(activity[activity.length - 1].date);
                 }
 
@@ -434,7 +437,7 @@
         async function loadActivityData(since) {
             await window.miband.activityReader.readSince(since)
             var activity = window.miband.activityReader.Data.History
-            alert("2");
+
             /// Heart Rate
             var data = activity.map((element) => { return { x: element.date, y: element.heartRate } })
 
@@ -458,11 +461,11 @@
             return [data, data1, data2, data3, data4, data5, data6, data7, data8, data9]
         }
 
+        
         loadButton.addEventListener("click", async () => {
             if(window.miband != null) {
                 var since = new Date(now-0 - 31*24*60*60*1000); // 31 Days
                 var timeFrame = 24; // hours
-                alert("5");
 
                 //// Sp02
                 var data = await loadSpo2Data(since);
@@ -508,7 +511,6 @@
             });
 
             window.addEventListener("heartrate", (e) => {
-                alert("Got heartrate");
                 console.log("Got heartrate", e.detail);
                 ws.send(e.detail);
                 hr.innerText = e.detail;
