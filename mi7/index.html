@@ -11,34 +11,31 @@
 
 <body>
     <div class="WebSocket">
-        <label class="form-group">
-            WebSocket IP
-            <input type="text" id="WSIP" placeholder="localhost" />
+        <label class="form-group">WebSocket IP
+          <input type="text" id="WSIP" placeholder="localhost" />
         </label>
-        <label class="form-group">
-            Port
-            <input type="text" id="WSPort" placeholder="3228" />
+        <label class="form-group">Port
+          <input type="text" id="WSPort" placeholder="3228" />
         </label>
         <button id="ConnectWS">Connect WebSocket</button>
         <p class="Status">WebSocket Status: <span id="WSStatus"></span></p>
-    </div>
-    <input type='text' name="chatbox_text" id="chatbox_text" style='display:none' value="❤{HR} bpm ">
-    <!--<button type="button" name="SafeChatboxText" id="SafeChatboxText" style='display:none'>Save</button>-->
-    <!-- <input type="checkbox" id="chatbox" name="chatbox" onclick='cb(this)'> -->
-     <div class="ChatboxHR" style="
-            position: fixed;
-            top: 5px;
-            left: 390px;
-            font-size: 20px;
-            height: 220px;
-            transition: top 0.5s;">
-      <input type="checkbox" id="chatbox" name="chatbox" onclick='cb(this)'> 
-    <!-- <label for="chatbox">Send to Chatbox</label>
-    <form name="chatbox_form" style="display: flex;">
+      </div>
       <input type='text' name="chatbox_text" id="chatbox_text" style='display:none' value="❤{HR} bpm ">
-      <button type="button" name="SafeChatboxText" id="SafeChatboxText" style='display:none'>Save</button>
-    </form> -->
-    <!--</div>
+      <!-- <input type="checkbox" id="chatbox" name="chatbox" onclick='cb(this)'> -->
+      <!-- <div class="ChatboxHR" style="
+              position: fixed;
+              top: 5px;
+              left: 390px;
+              font-size: 20px;
+              height: 220px;
+              transition: top 0.5s;">
+        <input type="checkbox" id="chatbox" name="chatbox" onclick='cb(this)'> -->
+        <!-- <label for="chatbox">Send to Chatbox</label>
+        <form name="chatbox_form" style="display: flex;">
+          <input type='text' name="chatbox_text" id="chatbox_text" style='display:none' value="❤{HR} bpm ">
+          <button type="button" name="SafeChatboxText" id="SafeChatboxText" style='display:none'>Save</button>
+        </form> -->
+      <!--</div>
     </div>-->
     <div id="topbar">
         <div><button id="settings">Settings</button></div>
@@ -65,13 +62,10 @@
     <div id="container">
         <div class="init">
             <div class="form-group">
-                <label for="auth-key">
-                    Auth key
+                <label for="auth-key">Auth key
                     <a target="_blank"
-                       href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki/Huami-Server-Pairing">
-                        what is
-                        this?
-                    </a>
+                        href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki/Huami-Server-Pairing">what is
+                        this?</a>
                 </label>
             </div>
             <div class="form-group">
@@ -103,163 +97,164 @@
     <script src="ecdh.js"></script>
     <script src="aes.js"></script>
     <script src="bundle.js"></script>
-
+    
     <script>
-        class Events {
-            events;
-            constructor() {
-                this.events = Object.create(null);
-            }
-            /**
-             * @param {string} name
-             * @param {Function} fn
-             * @returns
-             */
-            on(name, fn) {
-                if (!this.events[name]) {
-                    this.events[name] = [];
-                }
-                this.events[name].push(fn);
-                return this;
-            }
-            /**
-             * @param {string} name
-             * @param  {any} args
-             * @returns
-             */
-            emit(name, ...args) {
-                if (!this.events[name]) {
-                    return this;
-                }
-                const fns = this.events[name];
-                fns.forEach((fn) => fn.call(this, ...args));
-                return this;
-            }
-            /**
-             * @param {string} name
-             * @param {Function} fn
-             * @returns
-             */
-            off(name, fn) {
-                if (!this.events[name]) {
-                    return this;
-                }
-                if (!fn) {
-                    this.events[name] = null;
-                    return this;
-                }
-                const index = this.events[name].indexOf(fn);
-                this.events[name].splice(index, 1);
-                return this;
-            }
-            /**
-             * @param {string} name
-             * @param {Function} fn
-             * @returns
-             */
-            once(name, fn) {
-                const only = () => {
-                    fn.apply(this, arguments);
-                    this.off(name, only);
-                };
-                this.on(name, only);
-                return this;
-            }
+         class Events {
+      events;
+      constructor() {
+        this.events = Object.create(null);
+      }
+      /**
+       * @param {string} name
+       * @param {Function} fn
+       * @returns
+       */
+      on(name, fn) {
+        if (!this.events[name]) {
+          this.events[name] = [];
         }
-        class WS extends Events {
-            /**
-             * @type {WebSocket}
-             */
-            websocket
-            realclose = true;
-            get ip() {
-                return localStorage.getItem('WSIP') ?? 'localhost'
-            }
-            set ip(value) {
-                localStorage.setItem('WSIP', value ?? 'localhost')
-            }
-            get port() {
-                return localStorage.getItem('WSPort') ?? '3228'
-            }
-            set port(value) {
-                localStorage.setItem('WSPort', value ?? '3228')
-            }
-            connect(ip = this.ip, port = this.port) {
-                this.ip = ip;
-                this.port = port;
-                try {
-                    if (this.websocket) {
-                        this.realclose = true;
-                        this.disconnect();
-                    }
-                    this.websocket = new WebSocket(`ws://${this.ip}:${this.port}`);
-                    this.emit('connecting');
-                    this.websocket.addEventListener('open', () => {
-                        this.emit('open');
-                        this.realclose = false;
-                    });
-                    this.websocket.addEventListener('close', () => {
-                        this.emit('close');
-                    });
-                    this.websocket.addEventListener('error', event => console.log('WebSocket error: ', event));
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-            /**
-             * @param {string | ArrayBufferLike | Blob | ArrayBufferView} value
-             * @returns
-             */
-            send(value) {
-                return this.websocket.send(value);
-            }
-            disconnect() {
-                if (this.websocket) {
-                    this.websocket.close();
-                    this.websocket = null;
-                }
-            }
+        this.events[name].push(fn);
+        return this;
+      }
+      /**
+       * @param {string} name
+       * @param  {any} args
+       * @returns
+       */
+      emit(name, ...args) {
+        if (!this.events[name]) {
+          return this;
         }
-        const ws = new WS();
-        const WSIP = document.querySelector('#WSIP');
-        const WSPort = document.querySelector('#WSPort');
-        const WSStatus = document.querySelector("#WSStatus");
-        const ConnectWS = document.querySelector("#ConnectWS");
-        const ChatboxHR = document.querySelector("#chatbox");
-        //const SafeChatboxText = document.querySelector("#SafeChatboxText");
-        WSIP.value = ws.ip;
-        WSPort.value = ws.port;
-        ConnectWS.addEventListener("click", () => {
-            ws.ip = WSIP.value;
-            ws.port = WSPort.value;
-            WSStatus.classList.value = '';
-            ws.connect();
-        });
-        //SafeChatboxText.addEventListener("click", () => {
-        //    ws.send(JSON.stringify({ "text": chatbox_text.value }));
-        //});
-        ChatboxHR.addEventListener("click", () => {
-            ws.send(chatbox.checked);
-        });
-        ws.on('connecting', () => {
-            console.log('WebSocket Connecting');
-            WSStatus.classList.value = '';
-            WSStatus.classList.add('Connecting');
-        })
-        ws.on('open', () => {
-            console.log('WebSocket Connected');
-            WSStatus.classList.value = '';
-            WSStatus.classList.add('Connected');
-            ws.send(JSON.stringify({ "text": chatbox_text.value }));
-            //ws.send(chatbox.checked);
-        })
-        ws.on('close', () => {
-            WSStatus.classList.value = '';
-            WSStatus.classList.add('Disconnected');
-            console.log(`WebSocket Disconnected${ws.realclose ? '' : ', try again after 10 seconds..'}.`);
-            if (!ws.realclose) setTimeout(() => { ws.connect() }, 10000);
-        })
-        ws.connect();
+        const fns = this.events[name];
+        fns.forEach((fn) => fn.call(this, ...args));
+        return this;
+      }
+      /**
+       * @param {string} name
+       * @param {Function} fn
+       * @returns
+       */
+      off(name, fn) {
+        if (!this.events[name]) {
+          return this;
+        }
+        if (!fn) {
+          this.events[name] = null;
+          return this;
+        }
+        const index = this.events[name].indexOf(fn);
+        this.events[name].splice(index, 1);
+        return this;
+      }
+      /**
+       * @param {string} name
+       * @param {Function} fn
+       * @returns
+       */
+      once(name, fn) {
+        const only = () => {
+          fn.apply(this, arguments);
+          this.off(name, only);
+        };
+        this.on(name, only);
+        return this;
+      }
+    }
+    class WS extends Events {
+      /**
+       * @type {WebSocket}
+       */
+      websocket
+      realclose = true;
+      get ip() {
+        return localStorage.getItem('WSIP') ?? 'localhost'
+      }
+      set ip(value) {
+        localStorage.setItem('WSIP', value ?? 'localhost')
+      }
+      get port() {
+        return localStorage.getItem('WSPort') ?? '3228'
+      }
+      set port(value) {
+        localStorage.setItem('WSPort', value ?? '3228')
+      }
+      connect(ip = this.ip, port = this.port) {
+        this.ip = ip;
+        this.port = port;
+        try {
+          if (this.websocket) {
+            this.realclose = true;
+            this.disconnect();
+          }
+          this.websocket = new WebSocket(`ws://${this.ip}:${this.port}`);
+          this.emit('connecting');
+          this.websocket.addEventListener('open', () => {
+            this.emit('open');
+            this.realclose = false;
+          });
+          this.websocket.addEventListener('close', () => {
+            this.emit('close');
+          });
+          this.websocket.addEventListener('error', event => console.log('WebSocket error: ', event));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      /**
+       * @param {string | ArrayBufferLike | Blob | ArrayBufferView} value 
+       * @returns 
+       */
+      send(value) {
+        return this.websocket.send(value);
+      }
+      disconnect() {
+        if (this.websocket) {
+          this.websocket.close();
+          this.websocket = null;
+        }
+      }
+    }
+    const ws = new WS();
+    const WSIP = document.querySelector('#WSIP');
+    const WSPort = document.querySelector('#WSPort');
+    const WSStatus = document.querySelector("#WSStatus");
+    const ConnectWS = document.querySelector("#ConnectWS");
+    //const SafeChatboxText = document.querySelector("#SafeChatboxText");
+    // const ChatboxHR = document.querySelector("#chatbox");
+    WSIP.value = ws.ip;
+    WSPort.value = ws.port;
+    ConnectWS.addEventListener("click", () => {
+      ws.ip = WSIP.value;
+      ws.port = WSPort.value;
+      WSStatus.classList.value = '';
+      ws.connect();
+    });
+    // SafeChatboxText.addEventListener("click", () => {
+    //   ws.send(JSON.stringify({"text":chatbox_text.value}));
+    // });
+    // ChatboxHR.addEventListener("click", () => {
+    //   ws.send(chatbox.checked);
+    // });
+    ws.on('connecting', () => {
+      console.log('WebSocket Connecting');
+      WSStatus.classList.value = '';
+      WSStatus.classList.add('Connecting');
+    })
+    ws.on('open', () => {
+      console.log('WebSocket Connected');
+      WSStatus.classList.value = '';
+        WSStatus.classList.add('Connected');
+        chatbox_text.value = 
+      ws.send(JSON.stringify({"text":chatbox_text.value}));
+      //ws.send(chatbox.checked);
+    })
+    ws.on('close', () => {
+      WSStatus.classList.value = '';
+      WSStatus.classList.add('Disconnected');
+      console.log(`WebSocket Disconnected${ws.realclose ? '' : ', try again after 10 seconds..'}.`);
+      if (!ws.realclose) setTimeout(() => { ws.connect() }, 10000);
+    })
+    ws.connect();
 
         const vitalsChart = new VitalsChart("#vitalsChart");
         window.vitalsChart = vitalsChart;
@@ -269,7 +264,7 @@
         window.activityChart = activityChart;
         const loadButton = document.querySelector("#load_all");
 
-
+        
         const o2display = document.querySelector("#o2display");
         const o2displaydate = document.querySelector("#o2displaydate");
         const hrdisplay = document.querySelector("#hrdisplay");
@@ -293,7 +288,8 @@
             keyInput.value = authKey;
         }
 
-        function updateDisplay() {
+        function updateDisplay()
+        {
             try {
                 // Update SpO2
                 var spo2 = window.miband.sp02Reader.Data.History;
@@ -315,6 +311,7 @@
 
                     var hr = activity[activity.length - 1].heartRate
                     hrdisplay.innerHTML = hr ? hr : "--";
+                    ws.send(JSON.stringify({ "text": hr }));
                     hrdisplaydate.innerHTML = relativeDatetime(activity[activity.length - 1].date);
                 }
 
@@ -336,26 +333,28 @@
 
         async function loadRecentSpo2Data() {
 
-            if (window.miband && window.miband.GATT && !window.miband.GATT.connected) {
+            if(window.miband && window.miband.GATT && !window.miband.GATT.connected)
+            {
                 clearInterval(spo2Timer);
                 notworndisplay.innerHTML = "Band not connected.";
                 return
             }
 
             var newest = window.miband.sp02Reader.Data.NewestDate
-            newest = new Date(newest - 0 + 1 * 1000) // 1 second in the future, or the most recent gets re-returned
-            if (newest) {
-
+            newest = new Date(newest-0 + 1*1000) // 1 second in the future, or the most recent gets re-returned
+            if(newest)
+            {
+                
                 console.log("looking for new data since " + newest);
                 await window.miband.sp02Reader.readSince(newest);
-                if (window.miband.sp02Reader.Data.Since.length == 0) {
+                if(window.miband.sp02Reader.Data.Since.length == 0){
                     console.log("no new data");
                     return;
                 }
                 var sp02 = window.miband.sp02Reader.Data.History
                 var data = sp02.map((element) => { return { x: element.date, y: element.average } })
 
-                var processed = processSpo2Data(data);
+                var processed =  processSpo2Data(data);
 
                 vitalsChart.seto2(processed)
                 //vitalsChart.chart.zoomX(since.getTime(), now.getTime()); // Zoom
@@ -367,9 +366,9 @@
             // Fill nulls and sort
             var gapInMinutes = 30
             var dataLength = data.length
-            for (var i = 0; i < dataLength - 1; i += 1) {
-                if ((data[i + 1].x - data[i].x) / 1000 / 60 > gapInMinutes) {
-                    data.push({ x: new Date(data[i].x - 0 + gapInMinutes * 60 * 1000), y: null })
+            for (var i = 0; i <  dataLength- 1; i += 1) {
+                if ((data[i+1].x - data[i].x)/1000/60 > gapInMinutes) {
+                    data.push({x: new Date(data[i].x-0 + gapInMinutes*60*1000), y: null})
                 }
             }
             data.sort((a, b) => (a.x > b.x) ? 1 : -1)
@@ -381,18 +380,20 @@
 
 
         async function loadRecentActivityData() {
-            if (window.miband && window.miband.GATT && !window.miband.GATT.connected) {
+            if(window.miband && window.miband.GATT && !window.miband.GATT.connected)
+            {
                 clearInterval(activityTimer);
                 notworndisplay.innerHTML = "Band not connected.";
                 return
             }
 
             var newest = window.miband.activityReader.Data.NewestDate
-            newest = new Date(newest - 0 + 1 * 1000) // 1 second in the future, or the most recent gets re-returned
-            if (newest) {
+            newest = new Date(newest-0 + 1*1000) // 1 second in the future, or the most recent gets re-returned
+            if(newest)
+            {
                 console.log("looking for new activity data since " + newest);
                 await window.miband.activityReader.readSince(newest);
-                if (window.miband.activityReader.Data.Since.length == 0) {
+                if(window.miband.activityReader.Data.Since.length == 0){
                     console.log("no new data");
                     return;
                 }
@@ -453,14 +454,14 @@
             var data7 = activity.map((element) => { return { x: element.date, y: element.unknown1 } })
             var data8 = activity.map((element) => { return { x: element.date, y: element.category } })
             var data9 = activity.map((element) => { return { x: element.date, y: element.steps } })
-
+            
             return [data, data1, data2, data3, data4, data5, data6, data7, data8, data9]
         }
 
-
+        
         loadButton.addEventListener("click", async () => {
-            if (window.miband != null) {
-                var since = new Date(now - 0 - 31 * 24 * 60 * 60 * 1000); // 31 Days
+            if(window.miband != null) {
+                var since = new Date(now-0 - 31*24*60*60*1000); // 31 Days
                 var timeFrame = 24; // hours
 
                 //// Sp02
@@ -468,7 +469,7 @@
                 var now = new Date()
                 vitalsChart.seto2(data)
                 //var firstSample = data[0].x
-                vitalsChart.chart.zoomX(new Date(now - 0 - timeFrame * 60 * 60 * 1000).getTime(), now.getTime()); // Zoom
+                vitalsChart.chart.zoomX(new Date(now-0 - timeFrame*60*60*1000).getTime(), now.getTime()); // Zoom
 
                 //// Activity
                 var temp = await loadActivityData(since);
@@ -477,13 +478,13 @@
 
                 vitalsChart.sethr(hr)
                 firstSample = hr[0].x
-                vitalsChart.chart.zoomX(new Date(now - 0 - timeFrame * 60 * 60 * 1000).getTime(), now.getTime()); // Zoom
+                vitalsChart.chart.zoomX(new Date(now-0 - timeFrame*60*60*1000).getTime(), now.getTime()); // Zoom
 
                 /// Sleep Chart
                 activityChart.set(data1, data2, data3, data4, data5, data6, data7)
                 activityCategoryChart.set(data8, data9)
                 firstSample = data1[0].x
-                activityChart.chart.zoomX(new Date(now - 0 - timeFrame * 60 * 60 * 1000).getTime(), now.getTime()); // Zoom
+                activityChart.chart.zoomX(new Date(now-0 - timeFrame*60*60*1000).getTime(), now.getTime()); // Zoom
 
                 updateDisplay();
             }
@@ -497,7 +498,7 @@
         connectButton.addEventListener("click", async () => {
             authKey = keyInput.value;
 
-            if (window.miband && window.miband.GATT && window.miband.GATT.connected) { await window.miband.GATT.disconnect(); }
+            if(window.miband && window.miband.GATT && window.miband.GATT.connected) {await window.miband.GATT.disconnect();}
 
             window.addEventListener("event_connected", (e) => {
                 container.classList.add("d-none");
@@ -519,7 +520,7 @@
                 //// Initialize
                 var now = new Date()
                 var timeFrame = 24; // hours
-                var since = new Date(now - 0 - timeFrame * 60 * 60 * 1000)
+                var since = new Date(now-0 - timeFrame*60*60*1000)
                 await window.miband.init();
 
                 //// Zoom
@@ -545,11 +546,11 @@
                 activityChart.chart.zoomX(since.getTime(), now.getTime()); // Zoom
                 activityCategoryChart.set(data8, data9)
                 activityCategoryChart.chart.zoomX(since.getTime(), now.getTime()); // Zoom
-
+                
 
                 //// Interval for new Data
-                spo2Timer = window.setInterval(loadRecentSpo2Data, 121 * 1000);
-                activityTimer = window.setInterval(loadRecentActivityData, 61 * 1000);
+                spo2Timer = window.setInterval(loadRecentSpo2Data, 121*1000);
+                activityTimer = window.setInterval(loadRecentActivityData, 61*1000);
 
                 updateDisplay();
 
@@ -560,39 +561,39 @@
         });
 
         function relativeDatetime(date) {
-            var delta = Math.round((+new Date - date) / 1000);
+    var delta = Math.round((+new Date - date) / 1000);
 
-            var minute = 60,
-                hour = minute * 60,
-                day = hour * 24,
-                week = day * 7;
+    var minute = 60,
+        hour = minute * 60,
+        day = hour * 24,
+        week = day * 7;
 
-            var fuzzy;
+    var fuzzy;
 
-            if (delta < 30) {
-                fuzzy = 'just now';
-            } else if (delta < minute) {
-                fuzzy = delta + ' seconds ago';
-            } else if (delta < 2 * minute) {
-                fuzzy = 'a minute ago'
-            } else if (delta < hour) {
-                fuzzy = Math.floor(delta / minute) + ' minutes ago.';
-            } else if (Math.floor(delta / hour) == 1) {
-                fuzzy = '1 hour ago.'
-            } else if (delta < day) {
-                fuzzy = Math.floor(delta / hour) + ' hours ago.';
-            } else if (delta < day * 2) {
-                fuzzy = 'yesterday';
-            }
-            else if (delta < day * 5) {
-                fuzzy = 'a few days ago';
-            }
-            else if (delta < day * 10) {
-                fuzzy = 'last week';
-            }
-            else { fuzzy = 'a long time ago' }
-            return fuzzy;
-        }
+    if (delta < 30) {
+        fuzzy = 'just now';
+    } else if (delta < minute) {
+        fuzzy = delta + ' seconds ago';
+    } else if (delta < 2 * minute) {
+        fuzzy = 'a minute ago'
+    } else if (delta < hour) {
+        fuzzy = Math.floor(delta / minute) + ' minutes ago.';
+    } else if (Math.floor(delta / hour) == 1) {
+        fuzzy = '1 hour ago.'
+    } else if (delta < day) {
+        fuzzy = Math.floor(delta / hour) + ' hours ago.';
+    } else if (delta < day * 2) {
+        fuzzy = 'yesterday';
+    }
+    else if (delta < day * 5) {
+        fuzzy = 'a few days ago';
+    }
+    else if (delta < day * 10) {
+        fuzzy = 'last week';
+    }
+    else {fuzzy = 'a long time ago'}
+    return fuzzy;
+}
     </script>
 </body>
 
