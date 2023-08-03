@@ -281,8 +281,8 @@
         const hrBox = document.querySelector(".hr");
         let authKey = localStorage.getItem("auth-key");
 
-        let spo2Timer = null;
-        let activityTimer = null;
+        //let spo2Timer = null;
+        //let activityTimer = null;
 
         if (authKey) {
             keyInput.value = authKey;
@@ -546,11 +546,13 @@
                 activityChart.chart.zoomX(since.getTime(), now.getTime()); // Zoom
                 activityCategoryChart.set(data8, data9)
                 activityCategoryChart.chart.zoomX(since.getTime(), now.getTime()); // Zoom
-                
 
-                //// Interval for new Data
-                spo2Timer = window.setInterval(loadRecentSpo2Data, 2*1000);
-                activityTimer = window.setInterval(loadRecentActivityData, 2*1000);
+                loadRecentSpo2Data();
+                loadRecentActivityData();
+
+                ////// Interval for new Data
+                //spo2Timer = window.setInterval(loadRecentSpo2Data, 121*1000);
+                //activityTimer = window.setInterval(loadRecentActivityData, 61*1000);
 
                 updateDisplay();
 
