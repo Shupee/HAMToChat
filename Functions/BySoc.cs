@@ -7,6 +7,7 @@ using WebSocketSharp;
 
 namespace HAMToChat.Functions
 {
+    //
     internal class BySoc
     {
         public static int HR = 0;
