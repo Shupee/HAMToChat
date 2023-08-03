@@ -13,7 +13,7 @@
 - - Name of artist
 - - Music playing time
 ## Getting started
-#### If You use Pulsoid
+#### If You use Pulsoid(Supported devices [here](https://www.blog.pulsoid.net/monitors?from=mheader))
 1. Registry on [Pulsoid.net](https://pulsoid.net/)
 2. Go to [Pulsoid Configuration](https://pulsoid.net/ui/configuration)
 3. Scroll to bottom of the webside, find "Feed reference" and copy it
