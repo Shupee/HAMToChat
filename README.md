@@ -22,8 +22,8 @@
 6. Open the "config.json" and replace "NULL" in ApiHB with "pulsoid"
 7. In "config.json" replace "NULL" in Token with your link. Exemple: "https://pulsoid.net/v1/api/feed/YOUR_FEED_REFERENCE"
 8. Done!
-#### You also can use VardAPI
-1. Open the "config.json" and replace "NULL" in ApiHB with "vardAPI"
+#### You also can use direct bluetooth connection
+1. Open the "config.json" and replace "NULL" in ApiHB with "vardAPI"(if you are using miband 7 use "Ismb7")
 2. Follow the instructions from this [GitRep](https://github.com/vard88508/vrc-osc-miband-hrm)
 3. Done!
 #### Console activate
