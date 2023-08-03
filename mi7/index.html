@@ -333,8 +333,6 @@
 
         async function loadRecentSpo2Data() {
 
-            alert(1);
-            console.log(1)
             if(window.miband && window.miband.GATT && !window.miband.GATT.connected)
             {
                 clearInterval(spo2Timer);
@@ -382,7 +380,6 @@
 
 
         async function loadRecentActivityData() {
-
             if(window.miband && window.miband.GATT && !window.miband.GATT.connected)
             {
                 clearInterval(activityTimer);
@@ -511,7 +508,6 @@
             });
 
             window.addEventListener("heartrate", (e) => {
-      
                 console.log("Got heartrate", e.detail);
                 ws.send(e.detail);
                 hr.innerText = e.detail;
