@@ -1,5 +1,5 @@
 # HAMToChat
-[![Static Badge](https://img.shields.io/badge/HAMToChat-v0.7-green)](https://github.com/1sup4ik1/HAMToChat/releases/tag/v0.7)
+[![Static Badge](https://img.shields.io/badge/HAMToChat-v1-green)](https://github.com/1sup4ik1/HAMToChat/releases/tag/v1)
 ## In Game
 
 <img src="https://github.com/1sup4ik1/HAMToChat/blob/master/image/image.png" alt="login">
