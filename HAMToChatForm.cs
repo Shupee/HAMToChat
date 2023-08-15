@@ -9,7 +9,6 @@ namespace HR
 {
     public partial class ToChat : Form
     {
-        readonly Config _config;
         readonly Tense _tense = new(60, 120);
         readonly HRToChat hRToChat;
         readonly MediaUtilities mediaUtilities = new();
@@ -17,48 +16,39 @@ namespace HR
         bool blink;
         public ToChat()
         {
-            var cfg = "Config.json";
-            if (File.Exists(cfg))
-                _config = new(cfg);
-            else
-            {
-                _config = new(cfg);
-                _config.SerializeCfg();
-            }
-
             try
             {
-                if (_config.ApiHB == "pulsoid")
-                    hRToChat = new HRToChat(_config);
-                else if (_config.ApiHB == "vardAPI")
+                if (ConfigManager.Instance.Config.ApiHB == "pulsoid")
+                    hRToChat = new HRToChat();
+                else if (ConfigManager.Instance.Config.ApiHB == "vardAPI")
                     new BySoc(false);
-                else if(_config.ApiHB == "Ismb7")
+                else if(ConfigManager.Instance.Config.ApiHB == "Ismb7")
                     new BySoc(true);
                 InitializeComponent();
-                if (_config.ApiHB == "NULL")
+                if (ConfigManager.Instance.Config.ApiHB == "NULL")
                     checkBox1.Enabled = false;
-                if (_config.ApiHB == "NULL")
+                if (ConfigManager.Instance.Config.ApiHB == "NULL")
                     checkBox2.Enabled = false;
 
-                checkBox1.Checked = _config.BPMToChat;
-                checkBox2.Checked = _config.Stress;
-                checkBox5.Checked = _config.SPArt;
-                checkBox4.Checked = _config.SPLyr;
-                checkBox3.Checked = _config.SPName;
-                checkBox6.Checked = _config.activity;
-                checkBox7.Checked = _config.SPTime;
-                checkBox8.Checked = _config.UWS;
+                checkBox1.Checked = ConfigManager.Instance.Config.BPMToChat;
+                checkBox2.Checked = ConfigManager.Instance.Config.Stress;
+                checkBox5.Checked = ConfigManager.Instance.Config.SPArt;
+                checkBox4.Checked = ConfigManager.Instance.Config.SPLyr;
+                checkBox3.Checked = ConfigManager.Instance.Config.SPName;
+                checkBox6.Checked = ConfigManager.Instance.Config.activity;
+                checkBox7.Checked = ConfigManager.Instance.Config.SPTime;
+                checkBox8.Checked = ConfigManager.Instance.Config.UWS;
                 double ms = 3600;
                 int st = 2;
                 mediaUtilities.OnNewLir += new Action<string>((string str) =>
                 {
-                    if (_config.UWS && _config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
+                    if (ConfigManager.Instance.Config.UWS && ConfigManager.Instance.Config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
                         Update(str);
                 });
                 waiter = new Waiter(delegate
                 {
                     st++;
-                    if (_config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing && !string.IsNullOrEmpty(mediaUtilities.CurrentLine()))
+                    if (ConfigManager.Instance.Config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing && !string.IsNullOrEmpty(mediaUtilities.CurrentLine()))
                     {
                         if (st == 3)
                         {
@@ -72,7 +62,7 @@ namespace HR
                     else
                         ms = 3600;
                     waiter.ChangeTime(ms);
-                    if (_config.UWS && _config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
+                    if (ConfigManager.Instance.Config.UWS && ConfigManager.Instance.Config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
                         return;
                     Update();
                 }, 1800);
@@ -99,31 +89,31 @@ namespace HR
                         AddInfo(ref sendLine, item);
             }
 
-            if (_config.BPMToChat && _config.ApiHB != "null")
+            if (ConfigManager.Instance.Config.BPMToChat && ConfigManager.Instance.Config.ApiHB != "null")
             {
                 int hr;
-                if (_config.ApiHB == "vardAPI" || _config.ApiHB == "Ismb7")
+                if (ConfigManager.Instance.Config.ApiHB == "vardAPI" || ConfigManager.Instance.Config.ApiHB == "Ismb7")
                     hr = BySoc.HR;
                 else
                     hr = hRToChat.HR;
-                AddInfo(ref sendLine, "❤️" + hr + " BPM" + (_config.Stress ? $"|Tense: {_tense.GetStress(hr)}%" : ""));
+                AddInfo(ref sendLine, "❤️" + hr + " BPM" + (ConfigManager.Instance.Config.Stress ? $"|Tense: {_tense.GetStress(hr)}%" : ""));
             }
 
-            if (_config.activity)
+            if (ConfigManager.Instance.Config.activity)
                 AddInfo(ref sendLine, $"now in \"{GetCurrentWindow.GetActiveWindowTitle()}\"");
 
             if (mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
             {
-                if (_config.SPName || _config.SPLyr || _config.SPArt || _config.SPTime)
+                if (ConfigManager.Instance.Config.SPName || ConfigManager.Instance.Config.SPLyr || ConfigManager.Instance.Config.SPArt || ConfigManager.Instance.Config.SPTime)
                 {
                     AddInfo(ref sendLine, "");
-                    if (_config.SPTime)
+                    if (ConfigManager.Instance.Config.SPTime)
                         AddInfo(ref sendLine, $"{mediaUtilities.TimeAndEndTime()}");
-                    if (_config.SPName)
+                    if (ConfigManager.Instance.Config.SPName)
                         AddInfo(ref sendLine, $"🎵{mediaUtilities.SongName()}🎵");
-                    if (_config.SPArt)
+                    if (ConfigManager.Instance.Config.SPArt)
                         AddInfo(ref sendLine, $"by {mediaUtilities.Artist()}");
-                    if (_config.SPLyr && mediaUtilities.CurrentLine() != null)
+                    if (ConfigManager.Instance.Config.SPLyr && mediaUtilities.CurrentLine() != null)
                         if (str != string.Empty)
                             AddInfo(ref sendLine, $">{str}" + (blink ? "_" : ""));
                         else
@@ -143,50 +133,50 @@ namespace HR
         }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            _config.BPMToChat = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.BPMToChat = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            _config.Stress = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.Stress = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
 
         private void checkBox5_CheckedChanged(object sender, EventArgs e)
         {
-            _config.SPArt = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.SPArt = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
-            _config.SPLyr = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.SPLyr = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            _config.SPName = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.SPName = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
 
         private void checkBox6_CheckedChanged(object sender, EventArgs e)
         {
-            _config.activity = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.activity = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
 
         private void checkBox7_CheckedChanged(object sender, EventArgs e)
         {
-            _config.SPTime = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.SPTime = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
 
         private void checkBox8_CheckedChanged(object sender, EventArgs e)
         {
-            _config.UWS = ((CheckBox)sender).Checked;
-            _config.SerializeCfg();
+            ConfigManager.Instance.Config.UWS = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.SaveConfig();
         }
     }
 

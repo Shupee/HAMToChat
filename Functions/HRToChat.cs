@@ -7,9 +7,9 @@ namespace HR.Functions
     {
         public int HR = 0;
         public event Action<int>? OnHB;
-        public HRToChat(Config config)
+        public HRToChat()
         {
-            if (config.Token == null)
+            if (ConfigManager.Instance.Config.Token == null)
             {
             IL_0:
                 Logger.Warn("Enter Token:");
@@ -22,7 +22,8 @@ namespace HR.Functions
                         MessageBoxIcon.Error,
                         MessageBoxDefaultButton.Button1,
                         MessageBoxOptions.DefaultDesktopOnly);
-                    new Config("Config.json") { Token = "" }.SerializeCfg();
+                    ConfigManager.Instance.Config = new() { Token = "" };
+                    ConfigManager.Instance.SaveConfig();
                     Process.GetCurrentProcess().Kill();
                 }
                 string tokenTry = Console.ReadLine();
@@ -31,12 +32,12 @@ namespace HR.Functions
                     Logger.Error("Not valid token!! Try again");
                     goto IL_0;
                 }
-                config.Token = tokenTry;
-                config.SerializeCfg();
+                ConfigManager.Instance.Config.Token = tokenTry;
+                ConfigManager.Instance.SaveConfig();
 
             }
             new Waiter(delegate {
-                HR = GetMyBpmPlsAsync(config.Token).GetAwaiter().GetResult();
+                HR = GetMyBpmPlsAsync(ConfigManager.Instance.Config.Token).GetAwaiter().GetResult();
             }, 2000).Start();
             //var ArgParss = new KVArgs(new string[] { $"token={config.Token}" });
             //var TokenService = new PulsoidTokenService();
