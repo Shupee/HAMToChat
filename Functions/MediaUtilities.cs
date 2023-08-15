@@ -73,6 +73,28 @@ namespace HASToChat.Functions
                             mbname = currentproperties.Title.Contains("-") ? currentproperties.Title.Split("-")[0] : currentproperties.Title;
                             MuxixMatchSubtitles = GetSubtitlesMX(mbname, artist);
                         }
+                        //LyricsLine lyricsLine = new LyricsLine();
+                        if (MuxixMatchSubtitles != null && MuxixMatchSubtitles.Lines != null)
+                            for (int i = 0; i < MuxixMatchSubtitles.Lines.ToArray().Length; i++)
+                            {
+                                if (i != 0)
+                                    if ((MuxixMatchSubtitles.Lines[i].LyricsTime.TotalSeconds - MuxixMatchSubtitles.Lines[i - 1].LyricsTime.TotalSeconds) > 2.5f)
+                                    {
+                                        MuxixMatchSubtitles.Lines[i].Text = MuxixMatchSubtitles.Lines[i - 1].Text + ". " + MuxixMatchSubtitles.Lines[i].Text;
+                                        MuxixMatchSubtitles.Lines[i].LyricsTime = MuxixMatchSubtitles.Lines[i - 1].LyricsTime;
+                                        MuxixMatchSubtitles.Lines.Remove(MuxixMatchSubtitles.Lines[i - 1]);
+                                    }
+                            }
+                        //foreach (var item in MuxixMatchSubtitles.Lines)
+                        //{
+                        //    if ((item.LyricsTime.TotalSeconds - lyricsLine.LyricsTime.TotalSeconds) > 2)
+                        //    {
+                        //        item.Text = item.Text + " " + lyricsLine.Text;
+                        //        MuxixMatchSubtitles.Lines.Remove(lyricsLine);
+                        //    }
+                        //    lyricsLine = item;
+                        //}
+          
                         Thread.Sleep(3000);
                     }
 

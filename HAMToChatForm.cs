@@ -48,7 +48,7 @@ namespace HR
                 checkBox6.Checked = _config.activity;
                 checkBox7.Checked = _config.SPTime;
                 checkBox8.Checked = _config.UWS;
-                double ms = 1000;
+                double ms = 3600;
                 int st = 2;
                 mediaUtilities.OnNewLir += new Action<string>((string str) =>
                 {
@@ -62,15 +62,15 @@ namespace HR
                     {
                         if (st == 3)
                         {
-                            ms = 1480;
+                            ms = 3400;
                             st = 0;
                         }
                         else
-                            ms = 1380;
+                            ms = 2480;
                         blink = !blink;
                     }
                     else
-                        ms = 1800;
+                        ms = 3600;
                     waiter.ChangeTime(ms);
                     if (_config.UWS && _config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
                         return;

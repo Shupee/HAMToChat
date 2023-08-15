@@ -354,7 +354,7 @@
                 var sp02 = window.miband.sp02Reader.Data.History
                 var data = sp02.map((element) => { return { x: element.date, y: element.average } })
 
-                var processed =  processSpo2Data(data);
+                var processed = processSpo2Data(data);
 
                 vitalsChart.seto2(processed)
                 //vitalsChart.chart.zoomX(since.getTime(), now.getTime()); // Zoom
