@@ -151,7 +151,7 @@ namespace HR
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
-            ////ConfigManager.Instance.Config.SPLyr = ((CheckBox)sender).Checked;
+            ConfigManager.Instance.Config.SPLyr = ((CheckBox)sender).Checked;
             ConfigManager.Instance.SaveConfig();
         }
 
