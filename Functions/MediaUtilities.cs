@@ -105,17 +105,32 @@ namespace HASToChat.Functions
         }
         public static MusixmatchClient MusixmatchLogin()
         {
-
             try
             {
-                var musixmatchClient = new MusixmatchClient(new MusixmatchToken());
+                MusixmatchToken token;
+                if (ConfigManager.Instance.Config.MusixmatchToken != "NULL")
+                {
+                    token = new MusixmatchToken(ConfigManager.Instance.Config.MusixmatchToken);
+                    Logger.Info($"[{nameof(MusixmatchClient)}] Reusing saved token...");
+                }
+                else
+                {
+                    token = new MusixmatchToken();
+                    Logger.Info($"[{nameof(MusixmatchClient)}] Generated a new token: {token}");
+                }
+                var musixmatchClient = new MusixmatchClient(token);
+                musixmatchClient.GetUserWeeklyTop("BY"); // Test request to throw an exception when the token is invalid
                 Logger.Info($"[{nameof(MusixmatchClient)}] Successful login!", ConsoleColor.Green);
+                ConfigManager.Instance.Config.MusixmatchToken = token.ToString();
+                ConfigManager.Instance.SaveConfig();
                 return musixmatchClient;
             }
             catch (Exception ex)
             {
                 Logger.Warn(ex.Message);
-                Logger.Warn($"[{nameof(MusixmatchClient)}] login retry...");
+                Logger.Warn($"[{nameof(MusixmatchClient)}] Generating a new token and starting over...");
+                ConfigManager.Instance.Config.MusixmatchToken = "NULL";
+                Thread.Sleep(5000); // Wait 5 seconds before generating a new token
                 return MusixmatchLogin();
             }
         }

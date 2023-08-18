@@ -5,35 +5,32 @@ namespace HR
 {
     public class Config
     {
-        [NonSerialized]
-        readonly string _cfgPath;
-
-        public Config(string CfgPath)
+        public static Config DeserializeCfg(string json)
         {
-            Console.WriteLine(CfgPath);
-            _cfgPath = CfgPath;
-            if (File.Exists(CfgPath))
+            var configDeserialized = JsonConvert.DeserializeObject<Config>(json);
+            var configDefault = new Config(); // there's a better approach I'm sure
+            return new Config
             {
-                var Instance = JsonConvert.DeserializeObject<Config>(File.ReadAllText(CfgPath));
-                if (Instance == null) return;
-                BPMToChat = Instance.BPMToChat;
-                Stress = Instance.Stress;
-                Token = Instance.Token;
-                SPTime = Instance.SPTime;
-                SPName = Instance.SPName;
-                SPLyr = Instance.SPLyr;
-                SPArt = Instance.SPArt;
-                activity = Instance.activity;
-                UWS = Instance.UWS;
-                ApiHB = Instance.ApiHB;
-            }
-     
+                activity = configDeserialized.activity,
+                ApiHB = configDeserialized.ApiHB ?? configDefault.ApiHB,
+                BPMToChat = configDeserialized.BPMToChat,
+                MusixmatchToken = configDeserialized.MusixmatchToken ?? configDefault.MusixmatchToken,
+                SPArt = configDeserialized.SPArt,
+                SPLyr = configDeserialized.SPLyr,
+                SPName = configDeserialized.SPName,
+                SPTime = configDeserialized.SPTime,
+                Stress = configDeserialized.Stress,
+                Token = configDeserialized.Token ?? configDefault.Token,
+                UWS = configDeserialized.UWS
+            };
         }
-        public void SerializeCfg()
-            => File.WriteAllText(_cfgPath, JsonConvert.SerializeObject(this, Formatting.Indented));
+
+        public string SerializeCfg() => JsonConvert.SerializeObject(this, Formatting.Indented);
+
         public bool BPMToChat, Stress, activity, UWS;
         public string ApiHB = "NULL";
         public bool SPTime, SPName, SPLyr, SPArt;
         public string? Token = "NULL";
+        public string? MusixmatchToken = "NULL";
     }
 }
