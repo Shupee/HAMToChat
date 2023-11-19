@@ -14,7 +14,7 @@ namespace HR
 
         private string configPath = ConfigPath;
         public Config Config { get; set; } = new Config();
-
+        //
         public ConfigManager(string configPath)
         {
             this.configPath = configPath;
