@@ -26,10 +26,10 @@ namespace HR
                     new BySoc(true);
                 InitializeComponent();
                 if (ConfigManager.Instance.Config.ApiHB == "NULL")
-                    checkBox1.Enabled = false;
-                if (ConfigManager.Instance.Config.ApiHB == "NULL")
+                {
                     checkBox2.Enabled = false;
-
+                    checkBox1.Enabled = false;
+                }
                 checkBox1.Checked = ConfigManager.Instance.Config.BPMToChat;
                 checkBox2.Checked = ConfigManager.Instance.Config.Stress;
                 checkBox5.Checked = ConfigManager.Instance.Config.SPArt;
@@ -38,7 +38,7 @@ namespace HR
                 checkBox6.Checked = ConfigManager.Instance.Config.activity;
                 checkBox7.Checked = ConfigManager.Instance.Config.SPTime;
                 checkBox8.Checked = ConfigManager.Instance.Config.UWS;
-                double ms = 3600;
+                double ms = 2000;
                 int st = 2;
                 mediaUtilities.OnNewLir += new Action<string>((string str) =>
                 {
@@ -52,15 +52,15 @@ namespace HR
                     {
                         if (st == 3)
                         {
-                            ms = 3400;
+                            ms = 1200;
                             st = 0;
                         }
                         else
-                            ms = 2680;
+                            ms = 1380;
                         blink = !blink;
                     }
                     else
-                        ms = 3600;
+                        ms = 1400;
                     waiter.ChangeTime(ms);
                     if (ConfigManager.Instance.Config.UWS && ConfigManager.Instance.Config.SPLyr && mediaUtilities.PlayTipe() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
                         return;

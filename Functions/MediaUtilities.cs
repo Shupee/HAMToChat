@@ -78,7 +78,7 @@ namespace HASToChat.Functions
                             for (int i = 0; i < MuxixMatchSubtitles.Lines.ToArray().Length; i++)
                             {
                                 if (i != 0)
-                                    if ((MuxixMatchSubtitles.Lines[i].LyricsTime.TotalSeconds - MuxixMatchSubtitles.Lines[i - 1].LyricsTime.TotalSeconds) < 2.7f)
+                                    if ((MuxixMatchSubtitles.Lines[i].LyricsTime.TotalSeconds - MuxixMatchSubtitles.Lines[i - 1].LyricsTime.TotalSeconds) < 1.3f)
                                     {
                                         MuxixMatchSubtitles.Lines[i].Text = MuxixMatchSubtitles.Lines[i - 1].Text + ". " + MuxixMatchSubtitles.Lines[i].Text;
                                         MuxixMatchSubtitles.Lines[i].LyricsTime = MuxixMatchSubtitles.Lines[i - 1].LyricsTime;
