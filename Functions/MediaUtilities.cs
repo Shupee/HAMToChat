@@ -13,39 +13,40 @@ namespace HASToChat.Functions
     internal class MediaUtilities
     {
 
-        private MediaManager mediaManager;
+        private readonly MediaManager _mediaManager;
 
 
-        public MediaUtilities()
+        public MediaUtilities(float WaitTime)
         {
-                musixmatchClient = MusixmatchLogin();
-                mediaManager = new MediaManager();
-                if (mediaManager.IsStarted)
-                    mediaManager.Dispose();
-                mediaManager.OnAnySessionOpened += MediaManager_OnAnySessionOpened;
-                mediaManager.OnAnySessionClosed += MediaManager_OnAnySessionClosed;
-                mediaManager.OnAnyPlaybackStateChanged += MediaManager_OnAnyPlaybackStateChanged;
-                mediaManager.OnAnyMediaPropertyChanged += MediaManager_OnAnyMediaPropertyChanged;
-                mediaManager.Start();
+                _musixmatchClient = MusixmatchLogin();
+                _mediaManager = new MediaManager();
+                if (_mediaManager.IsStarted)
+                    _mediaManager.Dispose();
+                _mediaManager.OnAnySessionOpened += MediaManager_OnAnySessionOpened;
+                _mediaManager.OnAnySessionClosed += MediaManager_OnAnySessionClosed;
+                _mediaManager.OnAnyPlaybackStateChanged += MediaManager_OnAnyPlaybackStateChanged;
+                _mediaManager.OnAnyMediaPropertyChanged += MediaManager_OnAnyMediaPropertyChanged;
+                _mediaManager.Start();
 
 
                 new Waiter(delegate
                 {
-                    if (currentSession == null || currentSession.ControlSession == null)
-                        return;
-                    if (OriginalTimeSpan != currentSession.ControlSession.GetTimelineProperties().Position)
+                    if (_currentSession == null || _currentSession.ControlSession == null)
                     {
-                        OriginalTimeSpan = currentSession.ControlSession.GetTimelineProperties().Position;
-                        timeSpan = currentSession.ControlSession.GetTimelineProperties().Position;
+                        return;
+                    }
+                    if (_originalTimeSpan != _currentSession.ControlSession.GetTimelineProperties().Position)
+                    {
+                        _originalTimeSpan = _currentSession.ControlSession.GetTimelineProperties().Position;
+                        _timeSpan = _currentSession.ControlSession.GetTimelineProperties().Position;
                     }
                     else
-                        timeSpan = TimeSpan.FromMilliseconds(timeSpan.TotalMilliseconds + 100);
+                        _timeSpan = TimeSpan.FromMilliseconds(_timeSpan.TotalMilliseconds + 100);
                         var w = CurrentLine();
                     if(lastLine != w)
                     {
                         w = w == null ? "" : w;
-                    if (OnNewLir != null)
-                        OnNewLir.Invoke(w);
+                        OnNewLir?.Invoke(w);
                         lastLine = w;
                     }
                 }, 100).Start();
@@ -55,34 +56,36 @@ namespace HASToChat.Functions
                     {
                         if (item.Key.ControlSession.GetPlaybackInfo().PlaybackStatus != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Paused)
                         {
-                            currentSession = item.Key;
-                            currentproperties = item.Value;
+                            _currentSession = item.Key;
+                            _currentProperties = item.Value;
                             break;
                         }
                     }
-                    if (name == SongName() || string.Empty == SongName())
-                        return;
-                    if (currentproperties != null)
+                    if (_name == SongName() || string.Empty == SongName())
                     {
-                        name = SongName();
-                        artist = Artist();
-                        var mbname = currentproperties.Title.Contains("-") ? currentproperties.Title.Split("-")[1] : currentproperties.Title;
-                        MuxixMatchSubtitles = GetSubtitlesMX(mbname, artist);
-                        if (MuxixMatchSubtitles == null)
+                        return;
+                    }
+                    if (_currentProperties != null)
+                    {
+                        _name = SongName();
+                        _artist = Artist();
+                        var mbname = _currentProperties.Title.Contains("-") ? _currentProperties.Title.Split("-")[1] : _currentProperties.Title;
+                        _MuxixmatchSubtitles = GetSubtitlesMX(mbname, _artist);
+                        if (_MuxixmatchSubtitles == null)
                         {
-                            mbname = currentproperties.Title.Contains("-") ? currentproperties.Title.Split("-")[0] : currentproperties.Title;
-                            MuxixMatchSubtitles = GetSubtitlesMX(mbname, artist);
+                            mbname = _currentProperties.Title.Contains("-") ? _currentProperties.Title.Split("-")[0] : _currentProperties.Title;
+                            _MuxixmatchSubtitles = GetSubtitlesMX(mbname, _artist);
                         }
                         //LyricsLine lyricsLine = new LyricsLine();
-                        if (MuxixMatchSubtitles != null && MuxixMatchSubtitles.Lines != null)
-                            for (int i = 0; i < MuxixMatchSubtitles.Lines.ToArray().Length; i++)
+                        if (_MuxixmatchSubtitles != null && _MuxixmatchSubtitles.Lines != null)
+                            for (int i = 0; i < _MuxixmatchSubtitles.Lines.ToArray().Length; i++)
                             {
                                 if (i != 0)
-                                    if ((MuxixMatchSubtitles.Lines[i].LyricsTime.TotalSeconds - MuxixMatchSubtitles.Lines[i - 1].LyricsTime.TotalSeconds) < 1.3f)
+                                    if ((_MuxixmatchSubtitles.Lines[i].LyricsTime.TotalSeconds - _MuxixmatchSubtitles.Lines[i - 1].LyricsTime.TotalSeconds) < WaitTime)
                                     {
-                                        MuxixMatchSubtitles.Lines[i].Text = MuxixMatchSubtitles.Lines[i - 1].Text + ". " + MuxixMatchSubtitles.Lines[i].Text;
-                                        MuxixMatchSubtitles.Lines[i].LyricsTime = MuxixMatchSubtitles.Lines[i - 1].LyricsTime;
-                                        MuxixMatchSubtitles.Lines.Remove(MuxixMatchSubtitles.Lines[i - 1]);
+                                        _MuxixmatchSubtitles.Lines[i].Text = _MuxixmatchSubtitles.Lines[i - 1].Text + ". " + _MuxixmatchSubtitles.Lines[i].Text;
+                                        _MuxixmatchSubtitles.Lines[i].LyricsTime = _MuxixmatchSubtitles.Lines[i - 1].LyricsTime;
+                                        _MuxixmatchSubtitles.Lines.Remove(_MuxixmatchSubtitles.Lines[i - 1]);
                                     }
                             }
                         //foreach (var item in MuxixMatchSubtitles.Lines)
@@ -134,75 +137,94 @@ namespace HASToChat.Functions
                 return MusixmatchLogin();
             }
         }
-        string lastLine = "";
+        private string lastLine = "";
         string GetSubtitleStr(Subtitles sub, int currentlyMs)
         {
             var currentTimeSpanTs = (int)TimeSpan.FromMilliseconds(currentlyMs).TotalSeconds;
-            var strline = "";
-            if(sub == null || sub.Lines.Count == 0)
-                return strline;
+            var strLine = "";
+            if (sub == null || sub.Lines.Count == 0)
+            {
+                return strLine;
+            }
             foreach (var item in sub.Lines)
             {
                 if ((int)item.LyricsTime.TotalSeconds <= currentTimeSpanTs)
-                    strline = item.Text;
+                {
+                    strLine = item.Text;
+                }
             }
-            return strline;
+            return strLine;
         }
-        Subtitles GetSubtitlesMX(string name, string artist)
+        private Subtitles GetSubtitlesMX(string name, string artist)
         {
             try
             {
-                var tracks = musixmatchClient.SongSearch(artist, name);
+                var tracks = _musixmatchClient.SongSearch(artist, name);
                 if (tracks.Count < 1)
+                {
                     return null;
+                }
                 var MuxixMatchTrack = tracks.First();
                 int trackId = MuxixMatchTrack.TrackId;
                 if (MuxixMatchTrack != null)
-                    return musixmatchClient.GetTrackSubtitles(trackId);
+                {
+                    return _musixmatchClient.GetTrackSubtitles(trackId);
+                }
             }
-            catch{}
+            catch {}
             return null;
 
         }
 
-        public GlobalSystemMediaTransportControlsSessionPlaybackStatus PlayTipe()
+        public bool HasLyric()
+         => _MuxixmatchSubtitles != null;
+
+        public GlobalSystemMediaTransportControlsSessionPlaybackStatus PlayType()
         {
-            if (currentSession != null && currentSession.ControlSession != null)
-                return currentSession.ControlSession.GetPlaybackInfo().PlaybackStatus;
+            if (_currentSession != null && _currentSession.ControlSession != null)
+            {
+                return _currentSession.ControlSession.GetPlaybackInfo().PlaybackStatus;
+            }
             else
+            {
                 return GlobalSystemMediaTransportControlsSessionPlaybackStatus.Paused;
+            }
         }
 
         public string SongName()
-            => currentproperties == null ? null : currentproperties.Title;
+            => _currentProperties?.Title;
         public string Artist()
-               => currentproperties == null ? null : currentproperties.Artist;
+               => _currentProperties?.Artist;
         public string CurrentLine()
         {
-            var sub = GetSubtitleStr(MuxixMatchSubtitles, (int)timeSpan.TotalMilliseconds);
+            var sub = GetSubtitleStr(_MuxixmatchSubtitles, (int)_timeSpan.TotalMilliseconds);
             if (sub == null)
+            {
                 return null;
+            }
             return sub == string.Empty ? "🎶" : sub;
         }
         public string TimeAndEndTime()
         {
-            if (currentSession == null || currentSession.ControlSession == null)
+            if (_currentSession == null || _currentSession.ControlSession == null)
+            {
                 return "";
-            TimeSpan currentt = timeSpan;
-            TimeSpan Durationt = currentSession.ControlSession.GetTimelineProperties().EndTime;
-            string currenttime = string.Format("{0:D2}:{1:D2}", currentt.Minutes, currentt.Seconds);
-            string Durationtime = string.Format("{0:D2}:{1:D2}", Durationt.Minutes, Durationt.Seconds);
-            return $"[{currenttime}/{Durationtime}]";
+            }
+            TimeSpan CurrentTime = _timeSpan;
+            TimeSpan DurationTime = _currentSession.ControlSession.GetTimelineProperties().EndTime;
+            string currentTimeStr = string.Format("{0:D2}:{1:D2}", CurrentTime.Minutes, CurrentTime.Seconds);
+            string DurationTimeStr = string.Format("{0:D2}:{1:D2}", DurationTime.Minutes, DurationTime.Seconds);
+            return $"[{currentTimeStr}/{DurationTimeStr}]";
         }
-        string name = "";
-        string artist = "";
+        private string _name = "";
+        private string _artist = "";
         public event Action<string> OnNewLir;
-        GlobalSystemMediaTransportControlsSessionMediaProperties currentproperties = null;
-        MediaSession currentSession = null;
-        MusixmatchClient musixmatchClient;
-        Subtitles MuxixMatchSubtitles;
-        TimeSpan OriginalTimeSpan;
-        TimeSpan timeSpan;
+        private GlobalSystemMediaTransportControlsSessionMediaProperties _currentProperties = null;
+        private MediaSession _currentSession = null;
+        private MusixmatchClient _musixmatchClient;
+        private Subtitles _MuxixmatchSubtitles;
+        private TimeSpan _originalTimeSpan;
+        private TimeSpan _timeSpan;
         #region Credits to dubya dude for this
         private void MediaManager_OnAnySessionOpened(MediaManager.MediaSession session)
           => currentSessions.Add(session, null);

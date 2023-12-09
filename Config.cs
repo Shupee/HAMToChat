@@ -21,13 +21,14 @@ namespace HR
                 SPTime = configDeserialized.SPTime,
                 Stress = configDeserialized.Stress,
                 Token = configDeserialized.Token ?? configDefault.Token,
-                UWS = configDeserialized.UWS
+                UWS = configDeserialized.UWS,
+                AFK = configDeserialized.AFK
             };
         }
 
         public string SerializeCfg() => JsonConvert.SerializeObject(this, Formatting.Indented);
 
-        public bool BPMToChat, Stress, activity, UWS;
+        public bool BPMToChat, Stress, activity, UWS, AFK;
         public string ApiHB = "NULL";
         public bool SPTime, SPName, SPLyr, SPArt;
         public string? Token = "NULL";

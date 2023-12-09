@@ -38,6 +38,7 @@
             checkBox3 = new CheckBox();
             label1 = new Label();
             panel2 = new Panel();
+            checkBox9 = new CheckBox();
             checkBox6 = new CheckBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -76,7 +77,7 @@
             panel1.Controls.Add(label1);
             panel1.Location = new Point(9, 67);
             panel1.Name = "panel1";
-            panel1.Size = new Size(213, 124);
+            panel1.Size = new Size(219, 134);
             panel1.TabIndex = 2;
             // 
             // checkBox8
@@ -146,13 +147,25 @@
             // panel2
             // 
             panel2.BackColor = SystemColors.ButtonShadow;
+            panel2.Controls.Add(checkBox9);
             panel2.Controls.Add(checkBox6);
             panel2.Controls.Add(checkBox2);
             panel2.Controls.Add(checkBox1);
             panel2.Location = new Point(9, 3);
             panel2.Name = "panel2";
-            panel2.Size = new Size(213, 58);
+            panel2.Size = new Size(219, 58);
             panel2.TabIndex = 3;
+            // 
+            // checkBox9
+            // 
+            checkBox9.AutoSize = true;
+            checkBox9.Location = new Point(118, 31);
+            checkBox9.Name = "checkBox9";
+            checkBox9.Size = new Size(101, 24);
+            checkBox9.TabIndex = 3;
+            checkBox9.Text = "AFKDetect";
+            checkBox9.UseVisualStyleBackColor = true;
+            checkBox9.CheckedChanged += checkBox9_CheckedChanged;
             // 
             // checkBox6
             // 
@@ -170,7 +183,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GrayText;
-            ClientSize = new Size(234, 203);
+            ClientSize = new Size(234, 206);
             Controls.Add(panel1);
             Controls.Add(panel2);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -196,5 +209,6 @@
         private CheckBox checkBox6;
         private CheckBox checkBox7;
         private CheckBox checkBox8;
+        private CheckBox checkBox9;
     }
 }

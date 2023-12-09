@@ -46,9 +46,9 @@ namespace HR
             AnsiInjector.Inject();
         }
 
-        protected static bool debug = false;
+        protected static bool _debug = false;
         public static void EnableDebug (bool enable) {
-            debug = enable;
+            _debug = enable;
         }
 
         protected static bool stylize = true;
@@ -57,11 +57,11 @@ namespace HR
         }
 
         public static void DebugInfo (string message) {
-            if (!debug) return;
+            if (!_debug) return;
             Console.WriteLine($"[{DateTime.Now.ToString("hh:mm:ss")}][DInf]→ {message}");
         }
         public static void DebugWarn (string message) {
-            if (!debug) return;
+            if (!_debug) return;
             Console.WriteLine($"[{DateTime.Now.ToString("hh:mm:ss")}][DWrn]→ {message}");
         }
 

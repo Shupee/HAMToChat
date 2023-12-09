@@ -8,41 +8,41 @@ namespace HR
 {
     internal class ConfigManager
     {
-        private static readonly object lockObject = new object();
-        private static ConfigManager instance;
+        private static readonly object _lockObject = new();
+        private static ConfigManager _instance;
         public const string ConfigPath = "Config.json";
-
-        private string configPath = ConfigPath;
+        private readonly string _configPath = ConfigPath;
         public Config Config { get; set; } = new Config();
         //
         public ConfigManager(string configPath)
         {
-            this.configPath = configPath;
+            this._configPath = configPath;
             if (File.Exists(configPath))
+            {
                 LoadConfig();
+            }
             else
+            {
                 SaveConfig();
+            }
         }
 
         public static ConfigManager Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    lock (lockObject)
+                    lock (_lockObject)
                     {
-                        if (instance == null)
-                        {
-                            instance = new ConfigManager(ConfigPath);
-                        }
+                        _instance ??= new ConfigManager(ConfigPath);
                     }
                 }
-                return instance;
+                return _instance;
             }
         }
 
-        public void LoadConfig() => Config = Config.DeserializeCfg(File.ReadAllText(configPath));
-        public void SaveConfig() => File.WriteAllText(configPath, Config.SerializeCfg());
+        public void LoadConfig() => Config = Config.DeserializeCfg(File.ReadAllText(_configPath));
+        public void SaveConfig() => File.WriteAllText(_configPath, Config.SerializeCfg());
     }
 }

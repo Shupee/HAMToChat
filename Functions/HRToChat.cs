@@ -49,7 +49,7 @@ namespace HR.Functions
 
         }
         //"https://pulsoid.net/v1/api/feed/ce72ae82-ca71-4545-b3a8-a2ec35740d60"
-        async Task<int> GetMyBpmPlsAsync(string feed)
+        private static async Task<int> GetMyBpmPlsAsync(string feed)
         {
             var httpClient = new HttpClient();
             var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
