@@ -25,7 +25,7 @@ namespace HAMToChat.Functions
                 }
                 else
                 {
-                    OpenBrowser("https://1sup4ik1.github.io/HAMToChat/mi7/");
+                    OpenBrowser("https://shupee.github.io/HAMToChat/mi7/");
                 }
 
                 Console.WriteLine("Waiting for connection from browser...");
