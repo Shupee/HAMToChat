@@ -61,6 +61,7 @@ namespace HR
                 });
                 waiter = new Waiter(delegate
                 {
+                    blink = !blink;
                     //st++;
                     //if (ConfigManager.Instance.Config.SPLyr && mediaUtilities.PlayType() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing && !string.IsNullOrEmpty(mediaUtilities.CurrentLine()))
                     //{
