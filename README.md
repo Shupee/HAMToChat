@@ -16,11 +16,11 @@
 #### If You use Pulsoid(Supported devices [here](https://www.blog.pulsoid.net/monitors?from=mheader))
 1. Registry on [Pulsoid.net](https://pulsoid.net/)
 2. Go to [Pulsoid Configuration](https://pulsoid.net/ui/configuration)
-3. Scroll to bottom of the webside, find "Feed reference" and copy it
+3. Scroll to bottom of the webside, find the standard widgets and copy "ce72ae82-ca71-4545-b3a8-a2ec35700000" from the link.
 4. Start the HAMToChat.exe
 5. After "config.json" is created close the HAMToChat
 6. Open the "config.json" and replace "NULL" in ApiHB with "pulsoid"
-7. In "config.json" replace "NULL" in Token with your link. Exemple: "https://pulsoid.net/v1/api/feed/YOUR_FEED_REFERENCE"
+7. In "config.json" replace the "NULL" with your token. Exemple: "ce72ae82-ca71-4545-b3a8-a2ec35700000"
 8. Done!
 #### You also can use direct bluetooth connection
 1. Get auth key of your device. (https://mmk.pw/xiaomikey/ - Best option) (For more information - please visit https://freemyband.com/ or https://github.com/argrento/huami-token if you experienced with python)
