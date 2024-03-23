@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using System.Text;
+using WebSocketSharp;
 
 namespace HR.Functions
 {
@@ -36,9 +39,20 @@ namespace HR.Functions
                 ConfigManager.Instance.SaveConfig();
 
             }
-            new Waiter(delegate {
-                HR = GetMyBpmPlsAsync(ConfigManager.Instance.Config.Token).GetAwaiter().GetResult();
-            }, 2000).Start();
+            new Thread(new ParameterizedThreadStart(delegate
+            {
+                WebSocket webSocket = new WebSocket(GetMyBpmPlsToken(ConfigManager.Instance.Config.Token).Result);
+                webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                webSocket.Connect();
+                webSocket.OnMessage += (sender, e) =>
+                {
+                    HR = JsonConvert.DeserializeObject<Data>(e.Data).data["heartRate"];
+                };
+            })).Start();
+
+            //new Waiter(delegate {
+            //    HR = GetMyBpmPlsAsync(ConfigManager.Instance.Config.Token).GetAwaiter().GetResult();
+            //}, 2000).Start();
             //var ArgParss = new KVArgs(new string[] { $"token={config.Token}" });
             //var TokenService = new PulsoidTokenService();
             //Open(ArgParss, TokenService);
@@ -48,7 +62,7 @@ namespace HR.Functions
             //};
 
         }
-        //"https://pulsoid.net/v1/api/feed/ce72ae82-ca71-4545-b3a8-a2ec35740d60"
+        //"https://pulsoid.net/v1/api/feed/ce72ae82-ca71-4545-b3a8-a2ec35700000"
         private static async Task<int> GetMyBpmPlsAsync(string feed)
         {
             var httpClient = new HttpClient();
@@ -72,10 +86,49 @@ namespace HR.Functions
                 return 0;
             }
         }
+        static async Task<string> GetMyBpmPlsToken(string widgetId)
+        {
+
+            var url = "https://pulsoid.net/v1/api/public/rpc";
+            var jsonBody = "{\"method\":\"getWidget\",\"jsonrpc\":\"2.0\",\"params\":{\"widgetId\":\"" + $"{widgetId}" + "\"},\"id\":\"" +
+                $"{Guid.NewGuid().ToString()}" + "\"}";
+
+            using (var httpClient = new HttpClient())
+            {
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+                requestMessage.Content = content;
+
+                // Установка параметра credentials в "include"
+                httpClient.DefaultRequestHeaders.Add("credentials", "include");
+
+                var response = await httpClient.SendAsync(requestMessage);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    JObject ojObject = (JObject)JObject.Parse(responseContent)["result"];
+                    var ojObject1 = JObject.Parse(ojObject.ToString())["ramielUrl"];
+                    return ojObject1.ToString();
+                }
+                else
+                {
+                    Console.WriteLine($"Ошибка: {response.StatusCode}");
+                }
+                return "NOPE";
+            }
+        }
+        //{"timestamp":1711186327935,"data":{"heartRate":82}}
         class MyBPM
         {
             public int bpm;
             public string measured_at;
+        }    
+        class Data
+        {
+            public long timestamp;
+            public Dictionary<string,int> data;
         }
     }
 }

@@ -49,8 +49,8 @@ namespace HR
                 checkBox7.Checked = ConfigManager.Instance.Config.SPTime;
                 checkBox8.Checked = ConfigManager.Instance.Config.UWS;
                 checkBox9.Checked = ConfigManager.Instance.Config.AFK;
-                int ms = 1100;
-                int st = 2;
+                //int ms = 1100;
+                //int st = 2;
                 mediaUtilities = new MediaUtilities(0.6f);
                 mediaUtilities.OnNewLir += new Action<string>((string str) =>
                 {
@@ -61,23 +61,23 @@ namespace HR
                 });
                 waiter = new Waiter(delegate
                 {
-                    st++;
-                    if (ConfigManager.Instance.Config.SPLyr && mediaUtilities.PlayType() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing && !string.IsNullOrEmpty(mediaUtilities.CurrentLine()))
-                    {
-                        if (st == 3)
-                        {
-                            ms = 1100;
-                            st = 0;
-                        }
-                        else
-                            ms = 1380;
-                        blink = !blink;
-                    }
-                    else
-                    {
-                        ms = 1400;
-                    }
-                    waiter.ChangeTime(ms);
+                    //st++;
+                    //if (ConfigManager.Instance.Config.SPLyr && mediaUtilities.PlayType() == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing && !string.IsNullOrEmpty(mediaUtilities.CurrentLine()))
+                    //{
+                    //    if (st == 3)
+                    //    {
+                    //        ms = 1100;
+                    //        st = 0;
+                    //    }
+                    //    else
+                    //        ms = 1380;
+                    //    blink = !blink;
+                    //}
+                    //else
+                    //{
+                    //    ms = 1400;
+                    //}
+                    //waiter.ChangeTime(ms);
                     if (!mediaUtilities.HasLyric())
                     {
                         Update();
@@ -88,7 +88,7 @@ namespace HR
                         return;
                     }
                     Update();
-                }, 1800);
+                }, 1400);
                 waiter.Start();
                 this.FormClosed += delegate
                 {
