@@ -20,7 +20,7 @@
 4. Start the HAMToChat.exe
 5. After "config.json" is created close the HAMToChat
 6. Open the "config.json" and replace "NULL" in ApiHB with "pulsoid"
-7. In the "config.json" file, replace "NULL" in the "Token" field with your token. Example: "ce72ae82-ca71-4545-b3a8-a2ec35700000"
+7. In the "config.json" file, replace "NULL" in the "Token" field with your token. Example: "00000000-0000-0000-0000-000000000000"
 8. Done!
 #### You also can use direct bluetooth connection
 1. Get auth key of your device. (https://mmk.pw/xiaomikey/ - Best option) (For more information - please visit https://freemyband.com/ or https://github.com/argrento/huami-token if you experienced with python)
