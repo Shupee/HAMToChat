@@ -16,7 +16,7 @@
 #### If You use Pulsoid(Supported devices [here](https://www.blog.pulsoid.net/monitors?from=mheader))
 1. Registry on [Pulsoid.net](https://pulsoid.net/)
 2. Go to [Pulsoid Configuration](https://pulsoid.net/ui/configuration)
-3. Scroll to bottom of the webside, find the standard widgets and copy "ce72ae82-ca71-4545-b3a8-a2ec35700000" from the link.
+3. Scroll to bottom of the webside, find the standard widgets and copy "00000000-0000-0000-0000-000000000000" from the link.
 4. Start the HAMToChat.exe
 5. After "config.json" is created close the HAMToChat
 6. Open the "config.json" and replace "NULL" in ApiHB with "pulsoid"
